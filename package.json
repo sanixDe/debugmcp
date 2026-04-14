@@ -41,11 +41,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sanixDe/debugmcp"
+    "url": "https://github.com/sani-savaliya/debugmcp"
   },
-  "homepage": "https://github.com/sanixDe/debugmcp#readme",
+  "homepage": "https://github.com/sani-savaliya/debugmcp#readme",
   "bugs": {
-    "url": "https://github.com/sanixDe/debugmcp/issues"
+    "url": "https://github.com/sani-savaliya/debugmcp/issues"
   },
   "engines": {
     "node": ">=18"

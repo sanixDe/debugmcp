@@ -12,8 +12,9 @@ async function loadDriver(
   try {
     const mod = await import(modulePath);
     return mod.createDriver() as DatabaseDriver;
-  } catch (err: any) {
-    if (err.code === "ERR_MODULE_NOT_FOUND" || err.code === "MODULE_NOT_FOUND") {
+  } catch (err: unknown) {
+    const code = err instanceof Error ? (err as NodeJS.ErrnoException).code : undefined;
+    if (code === "ERR_MODULE_NOT_FOUND" || code === "MODULE_NOT_FOUND") {
       throw new Error(
         `${driverType} driver requires "${packageName}" package.\n` +
           `Install it: npm install ${packageName}`

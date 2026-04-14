@@ -50,7 +50,14 @@ const configFileSchema = z.object({
 // ============================================================
 function resolveEnvVars(value: string): string {
   return value.replace(/\$([A-Z_][A-Z0-9_]*)/gi, (_, varName) => {
-    return process.env[varName] ?? "";
+    const resolved = process.env[varName];
+    if (resolved === undefined) {
+      throw new Error(
+        `Environment variable $${varName} is not set.\n` +
+          `Referenced in connection string. Set it before starting debugmcp.`
+      );
+    }
+    return resolved;
   });
 }
 

@@ -9,8 +9,9 @@ async function main() {
     const cli = parseCli(process.argv);
     const { app, browser } = loadConfig(cli);
     await startServer(app, browser);
-  } catch (err: any) {
-    console.error(`debugmcp error: ${err.message}`);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`debugmcp error: ${message}`);
     process.exit(1);
   }
 }

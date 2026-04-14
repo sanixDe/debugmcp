@@ -30,7 +30,7 @@ export function createDriver(): DatabaseDriver {
     },
 
     async listTables(schema?: string): Promise<readonly TableInfo[]> {
-      let query = `
+      const baseQuery = `
         SELECT
           s.name AS SchemaName,
           t.name AS TableName,
@@ -39,12 +39,18 @@ export function createDriver(): DatabaseDriver {
         JOIN sys.schemas s ON t.schema_id = s.schema_id
         JOIN sys.partitions p ON t.object_id = p.object_id AND p.index_id IN (0,1)
       `;
-      if (schema) {
-        query += ` WHERE s.name = '${schema.replace(/'/g, "''")}'`;
-      }
-      query += ` ORDER BY s.name, t.name`;
 
-      const result = await pool.request().query(query);
+      const request = pool.request();
+      let query: string;
+
+      if (schema) {
+        request.input("schema", sql.default.NVarChar, schema);
+        query = baseQuery + ` WHERE s.name = @schema ORDER BY s.name, t.name`;
+      } else {
+        query = baseQuery + ` ORDER BY s.name, t.name`;
+      }
+
+      const result = await request.query(query);
       return result.recordset.map((r: any) => ({
         schema: r.SchemaName,
         name: r.TableName,
